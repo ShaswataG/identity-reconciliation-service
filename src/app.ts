@@ -13,6 +13,10 @@ app.get('/', (_, res) => {
     res.json({ success: true, message: "Service is running" });
 });
 
+app.use("/api/v1/health", (_req, res) => {
+  res.json({ success: true, message: "OK" });
+});
+
 app.use(errorHandler);
 
 export default app;
