@@ -1,0 +1,32 @@
+{
+  "name": "identity-reconciliation-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --watch src --exec \"ts-node src/index.ts\"",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShaswataG/identity-reconciliation-service.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/ShaswataG/identity-reconciliation-service/issues"
+  },
+  "homepage": "https://github.com/ShaswataG/identity-reconciliation-service#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.3.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
