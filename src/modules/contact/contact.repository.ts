@@ -14,6 +14,7 @@ export class ContactRepository {
           email ? { email } : undefined,
           phoneNumber ? { phoneNumber } : undefined,
         ].filter(Boolean) as any[],
+        deletedAt: null,
       },
     });
   }
@@ -40,6 +41,7 @@ export class ContactRepository {
           { id: primaryId },
           { linkedId: primaryId },
         ],
+        deletedAt: null,
       },
     });
   }
@@ -49,6 +51,7 @@ export class ContactRepository {
       where: {
         linkedId,
         linkPrecedence: "secondary",
+        deletedAt: null,
       },
     });
   }
