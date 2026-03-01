@@ -3,13 +3,16 @@ import { body } from "express-validator";
 export const contactIdentifyValidator = [
   body("email")
     .optional({ nullable: true })
+    .trim()
+    .normalizeEmail()
     .isEmail()
     .withMessage("Invalid email format"),
 
   body("phoneNumber")
     .optional({ nullable: true })
-    .isString()
-    .withMessage("phoneNumber must be a string"),
+    .trim()
+    .isMobilePhone("any")
+    .withMessage("Invalid phone number"),
 
   body()
     .custom((value) => {
