@@ -1,4 +1,5 @@
-import { PrismaClient, Contact } from "@prisma/client";
+import { PrismaClient } from "../../generated/prisma/client.js";
+import type { Contact } from "../../generated/prisma/client.js";
 
 export class ContactRepository {
   private prisma: PrismaClient;
