@@ -34,6 +34,19 @@ export class ContactRepository {
     return this.prisma.contact.findUnique({ where: { id } });
   }
 
+  async findByIds(ids: number[]): Promise<Contact[]> {
+    if (ids.length === 0) {
+      return [];
+    }
+
+    return this.prisma.contact.findMany({
+      where: {
+        id: { in: ids },
+        deletedAt: null,
+      },
+    });
+  }
+
   async findClusterByPrimary(primaryId: number): Promise<Contact[]> {
     return this.prisma.contact.findMany({
       where: {
