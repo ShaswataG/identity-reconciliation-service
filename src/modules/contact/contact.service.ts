@@ -77,16 +77,38 @@ export class ContactService {
         });
       }
 
-      const allCluster = await repo.findByEmailOrPhone(email, phoneNumber);
+      // refetch all cluster contacts using primary id
+      const allCluster = await repo.findClusterByPrimary(primary.id);
 
+      // collect unique emails, phoneNumbers, and secondaries, with primary's values first
+      const emails: string[] = [];
+      const phoneNumbers: string[] = [];
       const emailSet = new Set<string>();
       const phoneSet = new Set<string>();
       const secondaryContactIds: number[] = [];
 
-      allCluster.forEach((contact: any) => {
-        if (contact.email) emailSet.add(contact.email);
-        if (contact.phoneNumber) phoneSet.add(contact.phoneNumber);
+      // Add primary's email and phone first if present
+      if (primary.email) {
+        emails.push(primary.email);
+        emailSet.add(primary.email);
+      }
+      if (primary.phoneNumber) {
+        phoneNumbers.push(primary.phoneNumber);
+        phoneSet.add(primary.phoneNumber);
+      }
 
+      // Add other contacts' emails/phones if unique
+      allCluster.forEach((contact: any) => {
+        if (contact.id !== primary.id) {
+          if (contact.email && !emailSet.has(contact.email)) {
+            emails.push(contact.email);
+            emailSet.add(contact.email);
+          }
+          if (contact.phoneNumber && !phoneSet.has(contact.phoneNumber)) {
+            phoneNumbers.push(contact.phoneNumber);
+            phoneSet.add(contact.phoneNumber);
+          }
+        }
         if (contact.linkPrecedence === "secondary") {
           secondaryContactIds.push(contact.id);
         }
@@ -95,8 +117,8 @@ export class ContactService {
       return {
         contact: {
           primaryContatctId: primary.id,
-          emails: Array.from(emailSet),
-          phoneNumbers: Array.from(phoneSet),
+          emails,
+          phoneNumbers,
           secondaryContactIds,
         },
       };

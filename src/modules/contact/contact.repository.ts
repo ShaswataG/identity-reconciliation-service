@@ -32,4 +32,15 @@ export class ContactRepository {
   async findById(id: number): Promise<Contact | null> {
     return this.prisma.contact.findUnique({ where: { id } });
   }
+
+  async findClusterByPrimary(primaryId: number): Promise<Contact[]> {
+    return this.prisma.contact.findMany({
+      where: {
+        OR: [
+          { id: primaryId },
+          { linkedId: primaryId },
+        ],
+      },
+    });
+  }
 }
