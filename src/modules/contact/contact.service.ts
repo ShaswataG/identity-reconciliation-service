@@ -3,12 +3,10 @@ import { ContactRepository } from "./contact.repository";
 import { IdentifyContactResponseDto } from "./dtos/identify-contact-response.dto";
 
 export class ContactService {
-  private repo: ContactRepository;
   private prisma;
 
   constructor(prismaClient: any) {
     this.prisma = prismaClient;
-    this.repo = new ContactRepository(prismaClient);
   }
 
   async identifyContact({
