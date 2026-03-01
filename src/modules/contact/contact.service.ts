@@ -53,6 +53,13 @@ export class ContactService {
             linkedId: primary.id,
             linkPrecedence: "secondary",
           });
+          
+          const secondaries = await repo.findSecondariesByLinkedId(contact.id);
+          for (const sec of secondaries) {
+            await repo.update(sec.id, {
+              linkedId: primary.id,
+            });
+          }
         }
       }
 

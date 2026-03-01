@@ -43,4 +43,13 @@ export class ContactRepository {
       },
     });
   }
+
+  async findSecondariesByLinkedId(linkedId: number): Promise<Contact[]> {
+    return this.prisma.contact.findMany({
+      where: {
+        linkedId,
+        linkPrecedence: "secondary",
+      },
+    });
+  }
 }
