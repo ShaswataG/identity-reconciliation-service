@@ -4,7 +4,7 @@ import { requestId } from './core/middleware/requestId';
 import { errorHandler } from './core/middleware/errorHandler';
 import { responseFormatter } from './core/middleware/responseFormatter';
 import apiRouter from './routes/index';
-
+import { setupSwagger } from './config/swagger';
 
 const app = express();
 
@@ -12,6 +12,8 @@ app.use(requestLogger);
 app.use(requestId);
 app.use(express.json());
 app.use(responseFormatter);
+
+setupSwagger(app);
 
 app.get('/', (_, res) => {
     res.json({ success: true, message: "Service is running" });
