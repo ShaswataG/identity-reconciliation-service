@@ -74,8 +74,9 @@ export class ContactService {
         }
       }
 
-      const existsEmail = matches.some((c: any) => c.email === email);
-      const existsPhone = matches.some((c: any) => c.phoneNumber === phoneNumber);
+      const allClusterBeforeCreate = await repo.findClusterByPrimary(primary.id);
+      const existsEmail = allClusterBeforeCreate.some((c: any) => c.email === email);
+      const existsPhone = allClusterBeforeCreate.some((c: any) => c.phoneNumber === phoneNumber);
 
       if (email && !existsEmail) {
         await repo.create({
