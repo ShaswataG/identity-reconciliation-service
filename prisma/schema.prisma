@@ -21,4 +21,5 @@ model Contact {
   linkPrecedence String
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
 }
