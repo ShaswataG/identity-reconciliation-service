@@ -12,3 +12,13 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Contact {
+  id             Int       @id @default(autoincrement())
+  email          String?
+  phoneNumber    String?
+  linkedId       Int?
+  linkPrecedence String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
