@@ -1,13 +1,9 @@
-import { prisma } from "../../lib/prisma";
+import { PrismaClient } from "@prisma/client";
 import { ContactRepository } from "./contact.repository";
 import { IdentifyContactResponseDto } from "./dtos/identify-contact-response.dto";
 
 export class ContactService {
-  private prisma;
-
-  constructor(prismaClient: any) {
-    this.prisma = prismaClient;
-  }
+  constructor(private prisma: PrismaClient) {}
 
   async identifyContact({
     email,
