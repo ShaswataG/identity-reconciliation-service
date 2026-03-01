@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { ContactRepository } from "./contact.repository";
+import { IdentifyContactResponseDto } from "./dtos/identify-contact-response.dto";
 
 export class ContactService {
   private repo: ContactRepository;
@@ -10,16 +11,13 @@ export class ContactService {
     this.repo = new ContactRepository(prismaClient);
   }
 
-  /**
-   * Performs identity reconciliation.
-   */
   async identifyContact({
     email,
     phoneNumber,
   }: {
     email?: string;
     phoneNumber?: string;
-  }) {
+  }): Promise<IdentifyContactResponseDto> {
     return await this.prisma.$transaction(async (tx: any) => {
       const repo = new ContactRepository(tx);
 
@@ -34,16 +32,14 @@ export class ContactService {
         });
 
         return {
-          primaryContactId: created.id,
-          emails: created.emails,
-          phoneNumbers: created.phoneNumbers,
-          secondaryContactIds: [],
+          contact: {
+            primaryContatctId: created.id,
+            emails: created.emails,
+            phoneNumbers: created.phoneNumbers,
+            secondaryContactIds: [],
+          },
         };
       }
-
-      const primaries = matches.filter(
-        (c: any) => c.linkPrecedence === "primary"
-      );
 
       const sorted = matches.sort(
         (a: any, b: any) => a.createdAt.getTime() - b.createdAt.getTime()
@@ -60,13 +56,17 @@ export class ContactService {
         }
       }
 
-      const existsEmail = matches.some((c: any) => c.email === email);
-      const existsPhone = matches.some((c: any) => c.phoneNumber === phoneNumber);
+      const existsEmail = matches.some((c: any) =>
+        c.emails?.includes(email ?? "")
+      );
+      const existsPhone = matches.some((c: any) =>
+        c.phoneNumbers?.includes(phoneNumber ?? "")
+      );
 
       if (email && !existsEmail) {
         await repo.create({
-          email,
-          phoneNumber: null,
+          emails: [email],
+          phoneNumbers: [],
           linkedId: survivingPrimary.id,
           linkPrecedence: "secondary",
         });
@@ -74,8 +74,8 @@ export class ContactService {
 
       if (phoneNumber && !existsPhone) {
         await repo.create({
-          email: null,
-          phoneNumber,
+          emails: [],
+          phoneNumbers: [phoneNumber],
           linkedId: survivingPrimary.id,
           linkPrecedence: "secondary",
         });
@@ -83,13 +83,34 @@ export class ContactService {
 
       const allContacts = await repo.findByEmailOrPhone(email, phoneNumber);
 
+      const emailSet = new Set<string>();
+      const phoneSet = new Set<string>();
+      const secondaryContactIds: number[] = [];
+
+      if (survivingPrimary.emails?.length) {
+        survivingPrimary.emails.forEach((e: any) => emailSet.add(e));
+      }
+      if (survivingPrimary.phoneNumbers?.length) {
+        survivingPrimary.phoneNumbers.forEach((p: any) => phoneSet.add(p));
+      }
+
+      const secondaryContacts = allContacts.filter(
+        (c: any) => c.linkPrecedence === "secondary"
+      );
+
+      secondaryContacts.forEach((sec: any) => {
+        sec.emails?.forEach((e: string) => emailSet.add(e));
+        sec.phoneNumbers?.forEach((p: string) => phoneSet.add(p));
+        secondaryContactIds.push(sec.id);
+      });
+
       return {
-        primaryContactId: survivingPrimary.id,
-        emails: survivingPrimary.emails,
-        phoneNumbers: survivingPrimary.phoneNumber,
-        secondaryContactIds: allContacts
-          .filter((c: any) => c.linkPrecedence === "secondary")
-          .map((c: any) => c.id),
+        contact: {
+          primaryContatctId: survivingPrimary.id,
+          emails: Array.from(emailSet),
+          phoneNumbers: Array.from(phoneSet),
+          secondaryContactIds,
+        },
       };
     });
   }
