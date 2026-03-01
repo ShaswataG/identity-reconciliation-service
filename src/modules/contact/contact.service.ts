@@ -25,8 +25,8 @@ export class ContactService {
 
       if (matches.length === 0) {
         const created = await repo.create({
-          emails: email ? [email] : [],
-          phoneNumbers: phoneNumber ? [phoneNumber] : [],
+          email: email ?? null,
+          phoneNumber: phoneNumber ?? null,
           linkedId: null,
           linkPrecedence: "primary",
         });
@@ -34,8 +34,8 @@ export class ContactService {
         return {
           contact: {
             primaryContatctId: created.id,
-            emails: created.emails,
-            phoneNumbers: created.phoneNumbers,
+            emails: created.email ? [created.email] : [],
+            phoneNumbers: created.phoneNumber ? [created.phoneNumber] : [],
             secondaryContactIds: [],
           },
         };
@@ -44,69 +44,57 @@ export class ContactService {
       const sorted = matches.sort(
         (a: any, b: any) => a.createdAt.getTime() - b.createdAt.getTime()
       );
-      const survivingPrimary = sorted[0];
+      const primary = sorted[0];
 
       const others = sorted.slice(1);
       for (const contact of others) {
         if (contact.linkPrecedence === "primary") {
           await repo.update(contact.id, {
-            linkedId: survivingPrimary.id,
+            linkedId: primary.id,
             linkPrecedence: "secondary",
           });
         }
       }
 
-      const existsEmail = matches.some((c: any) =>
-        c.emails?.includes(email ?? "")
-      );
-      const existsPhone = matches.some((c: any) =>
-        c.phoneNumbers?.includes(phoneNumber ?? "")
-      );
+      // insert new secondary contacts for new email/phone
+      const existsEmail = matches.some((c: any) => c.email === email);
+      const existsPhone = matches.some((c: any) => c.phoneNumber === phoneNumber);
 
       if (email && !existsEmail) {
         await repo.create({
-          emails: [email],
-          phoneNumbers: [],
-          linkedId: survivingPrimary.id,
+          email,
+          phoneNumber: null,
+          linkedId: primary.id,
           linkPrecedence: "secondary",
         });
       }
-
       if (phoneNumber && !existsPhone) {
         await repo.create({
-          emails: [],
-          phoneNumbers: [phoneNumber],
-          linkedId: survivingPrimary.id,
+          email: null,
+          phoneNumber,
+          linkedId: primary.id,
           linkPrecedence: "secondary",
         });
       }
 
-      const allContacts = await repo.findByEmailOrPhone(email, phoneNumber);
+      const allCluster = await repo.findByEmailOrPhone(email, phoneNumber);
 
       const emailSet = new Set<string>();
       const phoneSet = new Set<string>();
       const secondaryContactIds: number[] = [];
 
-      if (survivingPrimary.emails?.length) {
-        survivingPrimary.emails.forEach((e: any) => emailSet.add(e));
-      }
-      if (survivingPrimary.phoneNumbers?.length) {
-        survivingPrimary.phoneNumbers.forEach((p: any) => phoneSet.add(p));
-      }
+      allCluster.forEach((contact: any) => {
+        if (contact.email) emailSet.add(contact.email);
+        if (contact.phoneNumber) phoneSet.add(contact.phoneNumber);
 
-      const secondaryContacts = allContacts.filter(
-        (c: any) => c.linkPrecedence === "secondary"
-      );
-
-      secondaryContacts.forEach((sec: any) => {
-        sec.emails?.forEach((e: string) => emailSet.add(e));
-        sec.phoneNumbers?.forEach((p: string) => phoneSet.add(p));
-        secondaryContactIds.push(sec.id);
+        if (contact.linkPrecedence === "secondary") {
+          secondaryContactIds.push(contact.id);
+        }
       });
 
       return {
         contact: {
-          primaryContatctId: survivingPrimary.id,
+          primaryContatctId: primary.id,
           emails: Array.from(emailSet),
           phoneNumbers: Array.from(phoneSet),
           secondaryContactIds,
