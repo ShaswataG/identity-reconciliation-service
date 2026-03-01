@@ -4,10 +4,11 @@ import { IdentifyContactResponseDto } from "./dtos/identify-contact-response.dto
 
 export class ContactService {
   private repo: ContactRepository;
-  private prisma = prisma;
+  private prisma;
 
-  constructor() {
-    this.repo = new ContactRepository(prisma);
+  constructor(prismaClient: any) {
+    this.prisma = prismaClient;
+    this.repo = new ContactRepository(prismaClient);
   }
 
   async identifyContact({

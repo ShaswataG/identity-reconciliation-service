@@ -1,10 +1,11 @@
-import { prisma } from "../../lib/prisma";
-import { Contact } from "@prisma/client";
+import { PrismaClient, Contact } from "@prisma/client";
 
 export class ContactRepository {
-  private prisma = prisma;
+  private prisma: PrismaClient;
 
-  constructor() {}
+  constructor(prismaClient: PrismaClient) {
+    this.prisma = prismaClient;
+  }
 
   async findByEmailOrPhone(email?: string, phoneNumber?: string): Promise<Contact[]> {
     return this.prisma.contact.findMany({
