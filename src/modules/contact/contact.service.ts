@@ -1,4 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../../generated/prisma/client.js";
+import type { Prisma } from "../../generated/prisma/client.js";
 import { ContactRepository } from "./contact.repository";
 import { IdentifyContactResponseDto } from "./dtos/identify-contact-response.dto";
 
@@ -12,7 +13,7 @@ export class ContactService {
     email?: string;
     phoneNumber?: string;
   }): Promise<IdentifyContactResponseDto> {
-    return await this.prisma.$transaction(async (tx: any) => {
+    return await this.prisma.$transaction(async (tx: Prisma.TransactionClient   ) => {
       const repo = new ContactRepository(tx);
 
       const matches = await repo.findByEmailOrPhone(email, phoneNumber);
