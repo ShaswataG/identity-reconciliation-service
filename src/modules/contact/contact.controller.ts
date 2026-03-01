@@ -10,6 +10,6 @@ export const identifyContactController = async (
   
   const result = await contactService.identifyContact(req.body);
 
-  return res.success(result, "Contact identified");
+  return res.status(200).json(result);
 };
 
