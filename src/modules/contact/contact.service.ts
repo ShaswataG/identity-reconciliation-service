@@ -41,6 +41,24 @@ export class ContactService {
         };
       }
 
+      const resolvedIds = new Set<number>();
+      for (const contact of matches) {
+        if (contact.linkPrecedence === "secondary" && contact.linkedId !== null) {
+          resolvedIds.add(contact.linkedId);
+        } else {
+          resolvedIds.add(contact.id);
+        }
+      }
+
+      const missingPrimaryIds = Array.from(resolvedIds).filter(
+        (id) => !matches.some((c: any) => c.id === id)
+      );
+
+      if (missingPrimaryIds.length > 0) {
+        const missingPrimaries = await repo.findByIds(missingPrimaryIds);
+        matches.push(...missingPrimaries);
+      }
+
       const sorted = matches.sort(
         (a: any, b: any) => a.createdAt.getTime() - b.createdAt.getTime()
       );
@@ -53,7 +71,6 @@ export class ContactService {
             linkedId: primary.id,
             linkPrecedence: "secondary",
           });
-          
           const secondaries = await repo.findSecondariesByLinkedId(contact.id);
           for (const sec of secondaries) {
             await repo.update(sec.id, {
@@ -63,7 +80,6 @@ export class ContactService {
         }
       }
 
-      // insert new secondary contacts for new email/phone
       const existsEmail = matches.some((c: any) => c.email === email);
       const existsPhone = matches.some((c: any) => c.phoneNumber === phoneNumber);
 
