@@ -3,6 +3,7 @@ import { requestLogger } from './core/middleware/requestLogger.js';
 import { requestId } from './core/middleware/requestId.js';
 import { errorHandler } from './core/middleware/errorHandler.js';
 import { responseFormatter } from './core/middleware/responseFormatter.js';
+import apiRouter from './routes/index.js';
 
 const app = express();
 
@@ -18,6 +19,8 @@ app.get('/', (_, res) => {
 app.use("/api/v1/health", (_req, res) => {
   res.json({ success: true, message: "OK" });
 });
+
+app.use("/api/v1", apiRouter);
 
 app.use(errorHandler);
 
