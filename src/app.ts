@@ -5,6 +5,7 @@ import { errorHandler } from './core/middleware/errorHandler';
 import { responseFormatter } from './core/middleware/responseFormatter';
 import apiRouter from './routes/index';
 import { setupSwagger } from './config/swagger';
+import contactRouter from './modules/contact/contact.routes';
 
 const app = express();
 
@@ -15,9 +16,7 @@ app.use(responseFormatter);
 
 setupSwagger(app);
 
-app.get('/', (_, res) => {
-    res.json({ success: true, message: "Service is running" });
-});
+app.use("/", contactRouter)
 
 app.use("/api/health", (_req, res) => {
   res.json({ success: true, message: "OK" });
