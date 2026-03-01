@@ -1,9 +1,10 @@
 import express from 'express';
-import { requestLogger } from './core/middleware/requestLogger.js';
-import { requestId } from './core/middleware/requestId.js';
-import { errorHandler } from './core/middleware/errorHandler.js';
-import { responseFormatter } from './core/middleware/responseFormatter.js';
-import apiRouter from './routes/index.js';
+import { requestLogger } from './core/middleware/requestLogger';
+import { requestId } from './core/middleware/requestId';
+import { errorHandler } from './core/middleware/errorHandler';
+import { responseFormatter } from './core/middleware/responseFormatter';
+import apiRouter from './routes/index';
+
 
 const app = express();
 
