@@ -21,10 +21,12 @@
   },
   "homepage": "https://github.com/ShaswataG/identity-reconciliation-service#readme",
   "dependencies": {
+    "@prisma/adapter-pg": "^7.4.2",
     "@prisma/client": "^7.4.2",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "express-validator": "^7.3.1",
+    "pg": "^8.19.0",
     "pino": "^10.3.1",
     "prisma": "^7.4.2",
     "swagger-jsdoc": "^6.2.8",
