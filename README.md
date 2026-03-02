@@ -1,6 +1,5 @@
 # Identity Reconciliation Service — Architecture & Design Documentation
-
-> **Audience:** Senior engineers, backend architects, and contributors.  
+ 
 > **Stack:** Node.js · TypeScript · Express 5 · Prisma 7 · PostgreSQL · Pino
 
 ---
