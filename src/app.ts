@@ -16,6 +16,10 @@ app.use(responseFormatter);
 
 setupSwagger(app);
 
+app.get("/", (_req, res) => {
+  res.json({ success: true, message: "Welcome to the Identity Reconciliation Service API" });
+});
+
 app.use("/", contactRouter)
 
 app.use("/api/health", (_req, res) => {
