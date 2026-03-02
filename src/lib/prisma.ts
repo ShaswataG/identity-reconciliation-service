@@ -5,13 +5,10 @@ import pg from "pg";
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
-const connectionString = process.env.DATABASE_URL;
-
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
-  family: 4,
-} as pg.PoolConfig);
+});
 
 export const prisma =
   globalForPrisma.prisma ??

@@ -1,3 +1,6 @@
+import { setDefaultResultOrder } from "dns";
+setDefaultResultOrder("ipv4first")
+
 import app from "./app";
 const PORT = process.env.PORT || 5000;
 
