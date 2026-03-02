@@ -849,7 +849,7 @@ The existing route structure under `/api` is already compatible with this patter
 
 | Variable | Required | Description |
 |---|---|---|
-| `DATABASE_URL` | ✅ | PostgreSQL connection string (e.g., `postgresql://user:pass@host/db`) |
-| `PORT` | ❌ | Server port (default: `5000`) |
-| `LOG_LEVEL` | ❌ | Pino log level: `trace`, `debug`, `info`, `warn`, `error` (default: `info`) |
-| `NODE_ENV` | ❌ | `production` suppresses Prisma singleton caching on `globalThis` |
+| `DATABASE_URL` | Yes | PostgreSQL connection string (e.g., `postgresql://user:pass@host/db`) |
+| `PORT` | No | Server port (default: `5000`) |
+| `LOG_LEVEL` | No | Pino log level: `trace`, `debug`, `info`, `warn`, `error` (default: `info`) |
+| `NODE_ENV` | No | `production` suppresses Prisma singleton caching on `globalThis` |
