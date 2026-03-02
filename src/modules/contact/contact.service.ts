@@ -1,7 +1,7 @@
 import { PrismaClient } from "../../generated/prisma/client.js";
 import type { Prisma } from "../../generated/prisma/client.js";
 import { ContactRepository } from "./contact.repository";
-import { IdentifyContactResponseDto } from "./dtos/identify-contact-response.dto";
+import type { IdentifyContactResponseDto } from "./dtos/identify-contact-response.dto";
 
 export class ContactService {
   constructor(private prisma: PrismaClient) {}

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { ContactService } from "./contact.service";
 import { prisma } from "../../lib/prisma";
 

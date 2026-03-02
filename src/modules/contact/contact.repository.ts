@@ -2,9 +2,9 @@ import { PrismaClient } from "../../generated/prisma/client.js";
 import type { Contact } from "../../generated/prisma/client.js";
 
 export class ContactRepository {
-  private prisma: PrismaClient;
+  private prisma: any;
 
-  constructor(prismaClient: PrismaClient) {
+  constructor(prismaClient: any) {
     this.prisma = prismaClient;
   }
 
