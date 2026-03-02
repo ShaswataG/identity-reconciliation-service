@@ -1,11 +1,11 @@
 import express from 'express';
-import { requestLogger } from './core/middleware/requestLogger';
-import { requestId } from './core/middleware/requestId';
-import { errorHandler } from './core/middleware/errorHandler';
-import { responseFormatter } from './core/middleware/responseFormatter';
-import apiRouter from './routes/index';
-import { setupSwagger } from './config/swagger';
-import contactRouter from './modules/contact/contact.routes';
+import { requestLogger } from './core/middleware/requestLogger.js';
+import { requestId } from './core/middleware/requestId.js';
+import { errorHandler } from './core/middleware/errorHandler.js';
+import { responseFormatter } from './core/middleware/responseFormatter.js';
+import apiRouter from './routes/index.js';
+import { setupSwagger } from './config/swagger.js';
+import contactRouter from './modules/contact/contact.routes.js';
 
 const app = express();
 
